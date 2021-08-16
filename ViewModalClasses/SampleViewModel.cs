@@ -103,11 +103,33 @@ namespace LINQ.ViewModalClasses
                                     ProductName = prod.name,
                                     ProductSize = prod.size
                                 });
+                foreach (var prod in products)
+                {
+                    sb.AppendLine($"Produt ID: {prod.Identifier}");
+                    sb.Append($" Product Name: {prod.ProductName}");
+                    sb.Append($" Product Size: {prod.ProductSize}");
+                }
             }
             else
             {
+                var products = this.products.Select(prod => new
+                {
+                    Identifier = prod.productID,
+                    ProductName = prod.name,
+                    ProductSize = prod.size
+                });
 
+                foreach (var prod in products)
+                {
+                    sb.AppendLine($"Produt ID: {prod.Identifier}");
+                    sb.Append($" Product Name: {prod.ProductName}");
+                    sb.Append($" Product Size: {prod.ProductSize}");
+                }
             }
+
+            ResultText = sb.ToString();
+            this.products.Clear();
+
         }
     }
 }

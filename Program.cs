@@ -17,7 +17,8 @@ namespace LINQ
             //vm.GetAll();
             //vm.GetAllLooping();
             //vm.GetSingleColumn();
-            vm.GetSpecificColumns();
+            //vm.GetSpecificColumns();
+            vm.AnonymousClass();
 
             foreach (var item in vm.products)
             {

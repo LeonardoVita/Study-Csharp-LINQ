@@ -11,14 +11,17 @@ namespace LINQ
         {
             SampleViewModel vm = new SampleViewModel()
             {
-                UseQuerySyntax = false
+                //UseQuerySyntax = false
             };
 
             //vm.GetAll();
             //vm.GetAllLooping();
             //vm.GetSingleColumn();
             //vm.GetSpecificColumns();
-            vm.AnonymousClass();
+            //vm.AnonymousClass();
+            //vm.OrderBy();
+            //vm.DescendingOrderBy();
+            vm.OrderByTwoFields();
 
             foreach (var item in vm.products)
             {

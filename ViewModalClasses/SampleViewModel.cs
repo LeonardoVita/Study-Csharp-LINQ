@@ -105,9 +105,9 @@ namespace LINQ.ViewModalClasses
                                 });
                 foreach (var prod in products)
                 {
-                    sb.AppendLine($"Produt ID: {prod.Identifier}");
+                    sb.Append($"Produt ID: {prod.Identifier}");
                     sb.Append($" Product Name: {prod.ProductName}");
-                    sb.Append($" Product Size: {prod.ProductSize}");
+                    sb.AppendLine($" Product Size: {prod.ProductSize}");
                 }
             }
             else
@@ -121,15 +121,61 @@ namespace LINQ.ViewModalClasses
 
                 foreach (var prod in products)
                 {
-                    sb.AppendLine($"Produt ID: {prod.Identifier}");
+                    sb.Append($"Produt ID: {prod.Identifier}");
                     sb.Append($" Product Name: {prod.ProductName}");
-                    sb.Append($" Product Size: {prod.ProductSize}");
+                    sb.AppendLine($" Product Size: {prod.ProductSize}");
                 }
             }
 
             ResultText = sb.ToString();
             this.products.Clear();
 
+        }
+        public void OrderBy()
+        {
+            if (UseQuerySyntax)
+            {
+                this.products = (from prod in this.products
+                                orderby prod.name
+                                select prod).ToList();
+            }
+            else
+            {
+                this.products = this.products.OrderBy(prod => prod.name).ToList();
+            }
+
+            ResultText = $"Total Products {this.products.Count}";
+        }
+        public void DescendingOrderBy()
+        {
+            if (UseQuerySyntax)
+            {
+                this.products = (from prod in this.products
+                                 orderby prod.name descending
+                                 select prod).ToList();
+            }
+            else
+            {
+                this.products = this.products.OrderByDescending(prod => prod.name).ToList();
+            }
+
+            ResultText = $"Total Products {this.products.Count}";
+        }
+
+        public void OrderByTwoFields()
+        {
+            if (UseQuerySyntax)
+            {
+                this.products = (from prod in this.products
+                                 orderby prod.name , prod.standardCost descending
+                                 select prod).ToList();
+            }
+            else
+            {
+                this.products = this.products.OrderBy(prod => prod.name).ThenBy(prod => prod.standardCost).ToList();
+            }
+
+            ResultText = $"Total Products {this.products.Count}";
         }
     }
 }

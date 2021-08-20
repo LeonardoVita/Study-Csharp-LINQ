@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using LINQ.RepositoryClasses;
 
 namespace LINQ.ViewModalClasses
 {
@@ -103,6 +103,7 @@ namespace LINQ.ViewModalClasses
                                     ProductName = prod.name,
                                     ProductSize = prod.size
                                 });
+
                 foreach (var prod in products)
                 {
                     sb.Append($"Produt ID: {prod.Identifier}");
@@ -161,7 +162,6 @@ namespace LINQ.ViewModalClasses
 
             ResultText = $"Total Products {this.products.Count}";
         }
-
         public void OrderByTwoFields()
         {
             if (UseQuerySyntax)
@@ -173,6 +173,55 @@ namespace LINQ.ViewModalClasses
             else
             {
                 this.products = this.products.OrderBy(prod => prod.name).ThenBy(prod => prod.standardCost).ToList();
+            }
+
+            ResultText = $"Total Products {this.products.Count}";
+        }
+        public void WhereExpression()
+        {
+            string search = "L";
+            if (UseQuerySyntax)
+            {
+                this.products = (from prod in this.products
+                                 where prod.name.StartsWith(search)
+                                 && prod.standardCost > 40
+                                 select new Product
+                                 {
+                                    name = prod.name
+                                 }).ToList();
+            }
+            else
+            {
+                this.products = this.products.Where(prod => prod.name.StartsWith(search) && prod.standardCost > 40)
+                    .Select(prod => new Product {
+                        name = prod.name
+                    }).ToList();
+            }
+
+            ResultText = $"Total Products {this.products.Count}";
+        }
+        public void WhereExtensionExpression()
+        {
+            string search = "L";
+            if (UseQuerySyntax)
+            {
+                this.products = (from prod in this.products
+                                 where prod.name.StartsWith(search)
+                                 && prod.standardCost > 40
+                                 select new Product
+                                 {
+                                     name = prod.name,
+                                     color = prod.color
+                                 }).ByColor("Black").ToList();
+            }
+            else
+            {
+                this.products = this.products.Where(prod => prod.name.StartsWith(search) && prod.standardCost > 40)
+                    .Select(prod => new Product
+                    {
+                        name = prod.name,
+                        color = prod.color
+                    }).ByColor("Black").ToList();
             }
 
             ResultText = $"Total Products {this.products.Count}";

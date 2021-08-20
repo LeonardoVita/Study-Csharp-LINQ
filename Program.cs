@@ -21,12 +21,15 @@ namespace LINQ
             //vm.AnonymousClass();
             //vm.OrderBy();
             //vm.DescendingOrderBy();
-            vm.OrderByTwoFields();
+            //vm.OrderByTwoFields();
+            //vm.WhereExpression();
+            vm.WhereExtensionExpression();
 
             foreach (var item in vm.products)
             {
-                Console.WriteLine($"productID: {item.productID} | name: {item.name} | color: {item.color}\n" +
-                    $"standardCost: {item.standardCost} | listPrice: {item.listPrice} | size: {item.size}");
+                //Console.WriteLine($"productID: {item.productID} | name: {item.name} | color: {item.color}\n" +
+                //    $"standardCost: {item.standardCost} | listPrice: {item.listPrice} | size: {item.size}");
+                Console.WriteLine(item.name + item.color);
             }
 
             Console.WriteLine(vm.ResultText);

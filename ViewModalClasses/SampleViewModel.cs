@@ -226,5 +226,177 @@ namespace LINQ.ViewModalClasses
 
             ResultText = $"Total Products {this.products.Count}";
         }
+        public void First()
+        {
+            string search = "Red";
+            Product value;
+
+            try
+            {
+                if (UseQuerySyntax)
+                {
+                    value = (from prod in this.products
+                             select prod)
+                             .First(prod => prod.color == search);
+                }
+                else
+                {
+                    value = this.products.First(prod => prod.color == search);
+                }
+
+                ResultText = $"Valor: {value.name}";
+            }
+            catch 
+            {
+                ResultText = $"NOT FOUND";
+            }
+
+            this.products.Clear();
+        }
+        public void FirstOrDefault()
+        {
+            string search = "Red";
+            Product value;
+
+            
+            if (UseQuerySyntax)
+            {
+                value = (from prod in this.products
+                            select prod)
+                            .FirstOrDefault(prod => prod.color == search);
+            }
+            else
+            {
+                value = this.products.FirstOrDefault(prod => prod.color == search);
+            }
+
+            if (value == null)
+            {
+                ResultText = $"NOT FOUND";
+            }
+            else
+            {
+                ResultText = $"Valor: {value.name}";
+            }     
+
+            this.products.Clear();
+        }
+        public void Last()
+        {
+            string search = "Reasdad";
+            Product value;
+
+            try
+            {
+                if (UseQuerySyntax)
+                {
+                    value = (from prod in this.products
+                             select prod)
+                             .Last(prod => prod.color == search);
+                }
+                else
+                {
+                    value = this.products.Last(prod => prod.color == search);
+                }
+
+                ResultText = $"Valor: {value.name}";
+            }
+            catch
+            {
+                ResultText = $"NOT FOUND";
+            }
+
+            this.products.Clear();
+        }
+        public void LastOrDefault()
+        {
+            string search = "Red";
+            Product value;
+
+
+            if (UseQuerySyntax)
+            {
+                value = (from prod in this.products
+                         select prod)
+                            .LastOrDefault(prod => prod.color == search);
+            }
+            else
+            {
+                value = this.products.LastOrDefault(prod => prod.color == search);
+            }
+
+            if (value == null)
+            {
+                ResultText = $"NOT FOUND";
+            }
+            else
+            {
+                ResultText = $"Valor: {value.name}";
+            }
+
+            this.products.Clear();
+        }
+        public void Single()
+        {
+            int search = 706;
+            Product value;
+
+            try
+            {
+                if (UseQuerySyntax)
+                {
+                    value = (from prod in this.products
+                             select prod)
+                             .Single(prod => prod.productID == search);
+                }
+                else
+                {
+                    value = this.products.Single(prod => prod.productID == search);
+                }
+
+                ResultText = $"Valor: {value.name}";
+            }
+            catch
+            {
+                ResultText = $"NOT FOUND";
+            }
+
+            this.products.Clear();
+        }
+        public void SingleOrDefault()
+        {
+            int search = 706;
+            Product value;
+
+            try
+            {            
+                if (UseQuerySyntax)
+                {
+                    value = (from prod in this.products
+                             select prod)
+                             .SingleOrDefault(prod => prod.productID == search);
+                }
+                else
+                {
+                    value = this.products.SingleOrDefault(prod => prod.productID == search);
+                }
+
+                if (value == null)
+                {
+                    ResultText = $"NOT FOUND";
+                }
+                else
+                {
+                    ResultText = $"Valor: {value.name}";
+                }    
+
+            }
+            catch (Exception)
+            {
+                ResultText = $"NOT FOUND";
+            }
+
+            this.products.Clear();
+        }
     }
 }

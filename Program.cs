@@ -11,7 +11,7 @@ namespace LINQ
         {
             SampleViewModel vm = new SampleViewModel()
             {
-                //UseQuerySyntax = false
+                UseQuerySyntax = false
             };
 
             //vm.GetAll();
@@ -23,7 +23,13 @@ namespace LINQ
             //vm.DescendingOrderBy();
             //vm.OrderByTwoFields();
             //vm.WhereExpression();
-            vm.WhereExtensionExpression();
+            //vm.WhereExtensionExpression();
+            //vm.First();
+            //vm.FirstOrDefault();
+            //vm.Last();
+            //vm.LastOrDefault();
+            //vm.Single();
+            vm.SingleOrDefault();
 
             foreach (var item in vm.products)
             {

@@ -501,6 +501,27 @@ namespace LINQ.ViewModalClasses
 
             ResultText = $"Total Products: {products.Count}";
         }
+        public void Distinct()
+        {
+            List<string> colors;
+
+            if (UseQuerySyntax)
+            {
+                colors = (from prod in this.products
+                          select prod.color).Distinct().ToList();
+            }else
+            {
+                colors = this.products.Select(prod => prod.color).Distinct().ToList();
+            }
+
+            foreach (var color in colors)
+            {
+                Console.WriteLine($"Color: {color}");
+            }
+
+            ResultText = $"Total Products: {products.Count}";
+            this.products.Clear();
+        }
 
     }
 }

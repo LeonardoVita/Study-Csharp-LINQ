@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using LINQ.RepositoryClasses;
 
 namespace LINQ.ViewModalClasses
 {
@@ -13,10 +12,12 @@ namespace LINQ.ViewModalClasses
         public SampleViewModel()
         {
             products = ProductsRepository.GetAll(); 
+            sales = SalesOrderDetailRepository.GetAll();
         }
 
         public bool UseQuerySyntax = true;
         public List<Product> products;
+        public List<SalesOrderDetail> sales;
         public string ResultText;
         public void GetAll()
         {
@@ -398,5 +399,48 @@ namespace LINQ.ViewModalClasses
 
             this.products.Clear();
         }
+        public void ForEach()
+        {
+            if (UseQuerySyntax)
+            {
+                this.products = (from prod in this.products
+                                 let temp = prod.nameLength = prod.name.Length
+                                 select prod).ToList();
+            }
+            else
+            {
+                this.products.ForEach(prod => prod.nameLength = prod.name.Length);
+            }
+
+            ResultText = $"Total Products: {this.products.Count}";
+        }
+        public void ForEachCallingMethod()
+        {
+            if (UseQuerySyntax)
+            {
+                this.products = (from prod in this.products
+                                 let tmp = prod.totalSales = prod.totalSales = SalesForProduct(prod)
+                                 select prod).ToList();
+            }else
+            {
+                this.products.ForEach(prod => prod.totalSales = SalesForProduct(prod));
+            }
+        }
+        private decimal SalesForProduct(Product prod)
+        {
+            if (UseQuerySyntax)
+            {
+                var sales = (from sale in this.sales
+                             where sale.productID == prod.productID
+                             select sale).ToList();
+
+                return sales.Aggregate(0M, (total, next) => total += next.lineTotal);
+            }
+            else
+            {
+                return sales.Where(sale => sale.productID == prod.productID).Sum(sale => sale.lineTotal);                    
+            }
+        }
+       
     }
 }

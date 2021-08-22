@@ -11,7 +11,7 @@ namespace LINQ
         {
             SampleViewModel vm = new SampleViewModel()
             {
-                UseQuerySyntax = false
+                //UseQuerySyntax = false
             };
 
             //vm.GetAll();
@@ -29,13 +29,15 @@ namespace LINQ
             //vm.Last();
             //vm.LastOrDefault();
             //vm.Single();
-            vm.SingleOrDefault();
+            //vm.SingleOrDefault();
+            //vm.ForEach();
+            vm.ForEachCallingMethod();
 
             foreach (var item in vm.products)
             {
                 //Console.WriteLine($"productID: {item.productID} | name: {item.name} | color: {item.color}\n" +
                 //    $"standardCost: {item.standardCost} | listPrice: {item.listPrice} | size: {item.size}");
-                Console.WriteLine(item.name + item.color);
+                Console.WriteLine($"{item.name}\n{item.totalSales}");
             }
 
             Console.WriteLine(vm.ResultText);

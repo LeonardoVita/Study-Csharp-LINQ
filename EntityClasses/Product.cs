@@ -14,5 +14,9 @@ namespace LINQ.EntityClasses
         public decimal standardCost;
         public decimal listPrice;
         public string size;
+
+        //calculated properties
+        public int? nameLength;
+        public decimal? totalSales;
     }
 }

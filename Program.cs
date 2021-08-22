@@ -39,7 +39,8 @@ namespace LINQ
             //vm.Distinct();
             //vm.All();
             //vm.Any();
-            vm.LINQContainsInt();
+            //vm.LINQContainsInt();
+            vm.LINQContains();
 
             foreach (var item in vm.products)
             {

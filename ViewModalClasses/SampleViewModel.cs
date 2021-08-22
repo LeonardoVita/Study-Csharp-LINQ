@@ -573,5 +573,25 @@ namespace LINQ.ViewModalClasses
             ResultText = $"Value: {value}";
             this.products.Clear();
         }
+        public void LINQContains()
+        {
+            int search = 744;
+            bool value;
+            ProductIdComparer pc = new ProductIdComparer();
+            Product prodToFind = new Product { productID = search };
+
+            if (UseQuerySyntax)
+            {
+                value = (from prod in this.products
+                         select prod).Contains(prodToFind, pc);
+            }
+            else
+            {
+                value = this.products.Contains(prodToFind, pc);
+            }
+
+            ResultText = $"Value: {value}";
+            this.products.Clear();
+        }
     }
 }

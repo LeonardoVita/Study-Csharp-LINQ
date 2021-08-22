@@ -720,5 +720,49 @@ namespace LINQ.ViewModalClasses
             }
 
         }
+        public void Union()
+        {
+            ProductComparer pc = new ProductComparer();
+            List<Product> list1 = ProductsRepository.GetAll();
+            List<Product> list2 = ProductsRepository.GetAll();
+
+            list1.RemoveAll(prod => prod.color == "Black");
+            list2.RemoveAll(prod => prod.color == "Red");
+
+            if (UseQuerySyntax)
+            {
+                this.products = (from prod in list1
+                                 select prod)
+                                 .Union(list2, pc)
+                                 .OrderBy(prod => prod.name).ToList();
+            }
+            else
+            {
+                this.products = list1.Union(list2, pc).OrderBy(prod => prod.name).ToList();
+            }
+
+            ResultText = $"Total: {this.products.Count}";           
+
+        }
+        public void Concat()
+        {
+            List<Product> list1 = ProductsRepository.GetAll();
+            List<Product> list2 = ProductsRepository.GetAll();
+
+            if (UseQuerySyntax)
+            {
+                this.products = (from prod in list1
+                                 select prod)
+                                 .Concat(list2)
+                                 .OrderBy(prod => prod.name).ToList();
+            }
+            else
+            {
+                this.products = list1.Concat(list2).OrderBy(prod => prod.name).ToList();
+            }
+
+            ResultText = $"Total: {this.products.Count}";
+
+        }
     }
 }

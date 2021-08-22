@@ -593,5 +593,51 @@ namespace LINQ.ViewModalClasses
             ResultText = $"Value: {value}";
             this.products.Clear();
         }
+        public void SequenceEqualInteger()
+        {
+            bool value;
+            List<int> list1 = new List<int> { 1, 2, 3, 4, 5 };
+            List<int> list2 = new List<int> { 1, 2, 3, 4, 5 };
+
+            if (UseQuerySyntax)
+            {
+                value = (from item in list1
+                         select item).SequenceEqual(list2);
+            }else
+            {
+                value = list1.SequenceEqual(list2); 
+            }
+
+            ResultText = $"Value: {value}";
+            this.products.Clear();
+        }
+        public void SequenceEqualProducts()
+        {
+            bool value;
+            ProductComparer pc = new ProductComparer();
+            List<Product> list1 = new List<Product> 
+            { 
+                new Product {productID = 1,name = "Product 1"},
+                new Product {productID = 2,name = "Product 2"},
+            };
+            List<Product> list2 = new List<Product> 
+            {
+                new Product {productID = 1,name = "Product 1"},
+                new Product {productID = 2,name = "Product 2"},
+            };
+
+            if (UseQuerySyntax)
+            {
+                value = (from item in list1
+                         select item).SequenceEqual(list2, pc);
+            }
+            else
+            {
+                value = list1.SequenceEqual(list2, pc);
+            }
+
+            ResultText = $"Value: {value}";
+            this.products.Clear();
+        }
     }
 }

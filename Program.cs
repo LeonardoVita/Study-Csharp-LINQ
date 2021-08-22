@@ -11,7 +11,7 @@ namespace LINQ
         {
             SampleViewModel vm = new SampleViewModel()
             {
-                //UseQuerySyntax = false
+                UseQuerySyntax = false
             };
 
             //vm.GetAll();
@@ -48,7 +48,8 @@ namespace LINQ
             //vm.Intersect();
             //vm.Union();
             //vm.Concat();
-            vm.InnerJoin();
+            //vm.InnerJoin();
+            vm.InnerJoinTwoFields();
 
 
             foreach (var item in vm.products)

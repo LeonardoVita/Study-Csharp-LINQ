@@ -801,20 +801,21 @@ namespace LINQ.ViewModalClasses
             }
             else
             {
-                var query = this.products.Join(this.sales, prod => prod.productID, sale => sale.productID, (prod, sale) =>
-                new
-                {
-                    prod.productID,
-                    prod.name,
-                    prod.color,
-                    prod.standardCost,
-                    prod.listPrice,
-                    prod.size,
-                    sale.salesOrderID,
-                    sale.orderQTY,
-                    sale.unitPrice,
-                    sale.lineTotal
-                });
+                var query = this.products.Join(this.sales, 
+                    prod => prod.productID, 
+                    sale => sale.productID, 
+                    (prod, sale) => new {
+                        prod.productID,
+                        prod.name,
+                        prod.color,
+                        prod.standardCost,
+                        prod.listPrice,
+                        prod.size,
+                        sale.salesOrderID,
+                        sale.orderQTY,
+                        sale.unitPrice,
+                        sale.lineTotal
+                    });
 
                 foreach (var item in query)
                 {
@@ -825,6 +826,79 @@ namespace LINQ.ViewModalClasses
                     sb.AppendLine($"   Size: {item.size}");
                     sb.AppendLine($"   Order QTY: {item.orderQTY}");
 
+                }
+            }
+
+            ResultText = sb.ToString() + Environment.NewLine + $"Total: {count}";
+            this.products.Clear();
+        }
+        public void InnerJoinTwoFields()
+        {
+            short qty = 6;
+            int count = 0;
+
+            StringBuilder sb = new StringBuilder();
+
+            if (UseQuerySyntax)
+            {
+                var query = (from prod in this.products
+                             join sale in this.sales on
+                               new { prod.productID, Qty = qty }
+                                 equals
+                               new { sale.productID, Qty = sale.orderQTY }
+                             select new
+                             {
+                                 prod.productID,
+                                 prod.name,
+                                 prod.color,
+                                 prod.standardCost,
+                                 prod.listPrice,
+                                 prod.size,
+                                 sale.salesOrderID,
+                                 sale.orderQTY,
+                                 sale.unitPrice,
+                                 sale.lineTotal
+                             }).ToList();
+
+                foreach (var item in query)
+                {
+                    count++;
+                    sb.AppendLine($"Sales Order: {item.salesOrderID}");
+                    sb.AppendLine($"   Product ID: {item.productID}");
+                    sb.AppendLine($"   Product Name: {item.name}");
+                    sb.AppendLine($"   Size: {item.size}");
+                    sb.AppendLine($"   Order QTY: {item.orderQTY}");
+                    sb.AppendLine($"   Total: {item.lineTotal}c");
+                }
+            }
+            else
+            {
+                var query = this.products.Join(this.sales,
+                    prod => new { prod.productID, Qty = qty },
+                    sale => new { sale.productID, Qty = sale.orderQTY },
+                    (prod, sale) => new
+                    {
+                        prod.productID,
+                        prod.name,
+                        prod.color,
+                        prod.standardCost,
+                        prod.listPrice,
+                        prod.size,
+                        sale.salesOrderID,
+                        sale.orderQTY,
+                        sale.unitPrice,
+                        sale.lineTotal
+                    });
+
+                foreach (var item in query)
+                {
+                    count++;
+                    sb.AppendLine($"Sales Order: {item.salesOrderID}");
+                    sb.AppendLine($"   Product ID: {item.productID}");
+                    sb.AppendLine($"   Product Name: {item.name}");
+                    sb.AppendLine($"   Size: {item.size}");
+                    sb.AppendLine($"   Order QTY: {item.orderQTY}");
+                    sb.AppendLine($"   Total: {item.lineTotal}c");
                 }
             }
 

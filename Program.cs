@@ -11,7 +11,7 @@ namespace LINQ
         {
             SampleViewModel vm = new SampleViewModel()
             {
-                //UseQuerySyntax = false
+                UseQuerySyntax = false
             };
 
             //vm.GetAll();
@@ -38,7 +38,8 @@ namespace LINQ
             //vm.SkipWhile();
             //vm.Distinct();
             //vm.All();
-            vm.Any();
+            //vm.Any();
+            vm.LINQContainsInt();
 
             foreach (var item in vm.products)
             {

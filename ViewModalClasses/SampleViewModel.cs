@@ -556,5 +556,22 @@ namespace LINQ.ViewModalClasses
 
             ResultText = $"Value: {value}";
         }
+        public void LINQContainsInt()
+        {
+            bool value;
+            List<int> numbers = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+            if (UseQuerySyntax)
+            {
+                value = (from num in numbers
+                         select num).Contains(30);
+            }else
+            {
+                value = numbers.Contains(30);
+            }
+
+            ResultText = $"Value: {value}";
+            this.products.Clear();
+        }
     }
 }

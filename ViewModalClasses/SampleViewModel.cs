@@ -19,6 +19,7 @@ namespace LINQ.ViewModalClasses
         public List<Product> products;
         public List<SalesOrderDetail> sales;
         public string ResultText;
+
         public void GetAll()
         {
             List<Product> products;
@@ -522,6 +523,38 @@ namespace LINQ.ViewModalClasses
             ResultText = $"Total Products: {products.Count}";
             this.products.Clear();
         }
+        public void All()
+        {
+            string search = " ";
+            bool value;
 
+            if (UseQuerySyntax)
+            {
+                value = (from prod in this.products
+                         select prod).All(prod => prod.name.Contains(search));
+            }
+            else
+            {
+                value = this.products.All(prod => prod.name.Contains(search));
+            }
+
+            ResultText = $"Value: {value}";
+        }
+        public void Any()
+        {
+            string search = "L";
+            bool value;
+
+            if (UseQuerySyntax)
+            {
+                value = (from prod in this.products
+                         select prod).Any(prod => prod.name.Contains(search));
+            }else
+            {
+                value = this.products.Any(prod => prod.name.Contains(search));
+            }
+
+            ResultText = $"Value: {value}";
+        }
     }
 }

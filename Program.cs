@@ -36,7 +36,9 @@ namespace LINQ
             //vm.TakeWhile();
             //vm.Skip();
             //vm.SkipWhile();
-            vm.Distinct();
+            //vm.Distinct();
+            //vm.All();
+            vm.Any();
 
             foreach (var item in vm.products)
             {

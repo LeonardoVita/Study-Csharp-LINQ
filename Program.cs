@@ -42,7 +42,9 @@ namespace LINQ
             //vm.LINQContainsInt();
             //vm.LINQContains();
             //vm.SequenceEqualInteger();
-            vm.SequenceEqualProducts();
+            //vm.SequenceEqualProducts();
+            //vm.ExceptIntegers();
+            vm.Except();
 
 
             foreach (var item in vm.products)

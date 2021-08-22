@@ -639,5 +639,57 @@ namespace LINQ.ViewModalClasses
             ResultText = $"Value: {value}";
             this.products.Clear();
         }
+        public void ExceptIntegers()
+        {
+            List<int> exceptions;
+            List<int> list1 = new List<int> { 1, 2, 3, 4, 5 };
+            List<int> list2 = new List<int> { 3, 4 };
+
+            if (UseQuerySyntax)
+            {
+                exceptions = (from item in list1
+                              select item).Except(list2).ToList();
+            }
+            else
+            {
+                exceptions = list1.Except(list2).ToList();
+            }
+
+            ResultText = string.Empty;
+            this.products.Clear();
+
+            foreach (var item in exceptions)
+            {
+                Console.WriteLine(item);
+            }
+        }
+        public void Except()
+        {
+            ProductComparer pc = new ProductComparer();
+            List<Product> list1 = ProductsRepository.GetAll();
+            List<Product> list2 = ProductsRepository.GetAll();
+
+            list2.RemoveAll(prod => prod.color == "Black");
+
+            if (UseQuerySyntax)
+            {
+                list1 = (from prod in list1
+                         select prod)
+                         .Except(list2, pc).ToList();
+            }
+            else
+            {
+                list1 = list1.Except(list2, pc).ToList();
+            }
+
+            ResultText = string.Empty;
+            this.products.Clear();
+
+            foreach (var item in list1)
+            {
+                Console.WriteLine($"{item.name}");
+            }
+
+        }
     }
 }

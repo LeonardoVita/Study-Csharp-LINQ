@@ -764,5 +764,72 @@ namespace LINQ.ViewModalClasses
             ResultText = $"Total: {this.products.Count}";
 
         }
+        public void InnerJoin()
+        {
+            StringBuilder sb = new StringBuilder();
+            int count = 0;
+
+            if (UseQuerySyntax)
+            {
+                var query = (from prod in this.products
+                             join sale in this.sales
+                             on prod.productID equals sale.productID
+                             select new
+                             {
+                                 prod.productID,
+                                 prod.name,
+                                 prod.color,
+                                 prod.standardCost,
+                                 prod.listPrice,
+                                 prod.size,
+                                 sale.salesOrderID,
+                                 sale.orderQTY,
+                                 sale.unitPrice,
+                                 sale.lineTotal
+                             }).ToList();
+
+                foreach (var item in query)
+                {
+                    count++;
+                    sb.AppendLine($"Sales Order: {item.salesOrderID}");
+                    sb.AppendLine($"   Product ID: {item.productID}");
+                    sb.AppendLine($"   Product Name: {item.name}");
+                    sb.AppendLine($"   Size: {item.size}");
+                    sb.AppendLine($"   Order QTY: {item.orderQTY}");
+                    sb.AppendLine($"   Total: {item.lineTotal}c");
+                }
+            }
+            else
+            {
+                var query = this.products.Join(this.sales, prod => prod.productID, sale => sale.productID, (prod, sale) =>
+                new
+                {
+                    prod.productID,
+                    prod.name,
+                    prod.color,
+                    prod.standardCost,
+                    prod.listPrice,
+                    prod.size,
+                    sale.salesOrderID,
+                    sale.orderQTY,
+                    sale.unitPrice,
+                    sale.lineTotal
+                });
+
+                foreach (var item in query)
+                {
+                    count++;
+                    sb.AppendLine($"Sales Order: {item.salesOrderID}");
+                    sb.AppendLine($"   Product ID: {item.productID}");
+                    sb.AppendLine($"   Product Name: {item.name}");
+                    sb.AppendLine($"   Size: {item.size}");
+                    sb.AppendLine($"   Order QTY: {item.orderQTY}");
+
+                }
+            }
+
+            ResultText = sb.ToString() + Environment.NewLine + $"Total: {count}";
+            this.products.Clear();
+        }
     }
 }

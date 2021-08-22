@@ -46,8 +46,9 @@ namespace LINQ
             //vm.ExceptIntegers();
             //vm.Except();
             //vm.Intersect();
-            vm.Union();
+            //vm.Union();
             //vm.Concat();
+            vm.InnerJoin();
 
 
             foreach (var item in vm.products)

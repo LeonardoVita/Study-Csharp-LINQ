@@ -905,5 +905,58 @@ namespace LINQ.ViewModalClasses
             ResultText = sb.ToString() + Environment.NewLine + $"Total: {count}";
             this.products.Clear();
         }
+        public void GroupJoin()
+        {
+            StringBuilder sb = new StringBuilder();
+            List<ProductSales> grouped;
+
+            if (UseQuerySyntax)
+            {
+                grouped = (from prod in this.products
+                           join sale in this.sales
+                           on prod.productID equals sale.productID
+                           into sales
+                           select new ProductSales
+                           {
+                               product = prod,
+                               sales = sales
+                           }).ToList();
+            }
+            else
+            {
+                grouped = this.products.GroupJoin(this.sales,
+                    prod => prod.productID,
+                    sale => sale.productID,
+                    (prod, sales) => new ProductSales
+                    {
+                        product = prod,
+                        sales = sales.ToList()
+                    }).ToList();
+            }
+
+            foreach (var ps in grouped)
+            {
+                sb.AppendLine($"Product: {ps.product.name}");
+
+                if (ps.sales.Count() > 0)
+                {
+                    sb.AppendLine($"   ** Sales **");
+                    foreach (var sale in ps.sales)
+                    {
+                        sb.Append($"    SalesOrderID: {sale.salesOrderID}");
+                        sb.Append($"    Qty: {sale.orderQTY}");
+                        sb.AppendLine($"    Total: {sale.lineTotal}");
+                    }
+                }
+                else
+                {
+                    sb.AppendLine($"   ** No Sales for Product **");
+                }
+                sb.AppendLine("");
+            }
+
+            ResultText = sb.ToString();
+            this.products.Clear();
+        }
     }
 }

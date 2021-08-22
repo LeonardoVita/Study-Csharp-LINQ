@@ -44,7 +44,8 @@ namespace LINQ
             //vm.SequenceEqualInteger();
             //vm.SequenceEqualProducts();
             //vm.ExceptIntegers();
-            vm.Except();
+            //vm.Except();
+            vm.Intersect();
 
 
             foreach (var item in vm.products)

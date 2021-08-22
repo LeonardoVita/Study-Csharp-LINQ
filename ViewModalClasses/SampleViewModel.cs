@@ -691,5 +691,34 @@ namespace LINQ.ViewModalClasses
             }
 
         }
+        public void Intersect()
+        {
+            ProductComparer pc = new ProductComparer();
+            List<Product> list1 = ProductsRepository.GetAll();
+            List<Product> list2 = ProductsRepository.GetAll();
+
+            list1.RemoveAll(prod => prod.color == "Black");
+            list2.RemoveAll(prod => prod.color == "Red");
+
+            if (UseQuerySyntax)
+            {
+                list1 = (from prod in list1
+                         select prod)
+                         .Intersect(list2, pc).ToList();
+            }
+            else
+            {
+                list1 = list1.Intersect(list2, pc).ToList();
+            }
+
+            ResultText = $"Count: {list1.Count}";
+            this.products.Clear();
+
+            foreach (var item in list1)
+            {
+                Console.WriteLine($"{item.name}");
+            }
+
+        }
     }
 }

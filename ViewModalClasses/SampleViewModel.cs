@@ -456,6 +456,21 @@ namespace LINQ.ViewModalClasses
 
             ResultText = $"Total Products: {products.Count}";
         }
+        public void TakeWhile()
+        {
+            // para a execução da query quando a condição for falsa
+            if (UseQuerySyntax)
+            {
+                this.products = (from prod in this.products
+                                 select prod).TakeWhile(prod => prod.listPrice > 35).ToList();
+            }
+            else
+            {
+                this.products = this.products.TakeWhile(prod => prod.listPrice > 35).ToList();
+            }
+
+            ResultText = $"Total Products: {products.Count}";
+        }
         public void Skip()
         {
             if (UseQuerySyntax)
@@ -467,6 +482,21 @@ namespace LINQ.ViewModalClasses
             else
             {
                 this.products = this.products.OrderBy(prod => prod.name).Skip(4).ToList();
+            }
+
+            ResultText = $"Total Products: {products.Count}";
+        }
+        public void SkipWhile()
+        {
+            // começa apenas qunado a query retornar falso
+            if (UseQuerySyntax)
+            {
+                this.products = (from prod in this.products
+                                 select prod).SkipWhile(prod => prod.name.StartsWith("H")).ToList();
+            }
+            else
+            {
+                this.products = this.products.SkipWhile(prod => prod.name.StartsWith("H")).ToList();
             }
 
             ResultText = $"Total Products: {products.Count}";

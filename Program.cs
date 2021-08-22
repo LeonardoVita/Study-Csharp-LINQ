@@ -33,7 +33,9 @@ namespace LINQ
             //vm.ForEach();
             //vm.ForEachCallingMethod();
             //vm.Take();
-            vm.Skip();
+            //vm.TakeWhile();
+            //vm.Skip();
+            vm.SkipWhile();
 
             foreach (var item in vm.products)
             {

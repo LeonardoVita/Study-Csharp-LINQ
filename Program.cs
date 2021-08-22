@@ -31,7 +31,9 @@ namespace LINQ
             //vm.Single();
             //vm.SingleOrDefault();
             //vm.ForEach();
-            vm.ForEachCallingMethod();
+            //vm.ForEachCallingMethod();
+            //vm.Take();
+            vm.Skip();
 
             foreach (var item in vm.products)
             {

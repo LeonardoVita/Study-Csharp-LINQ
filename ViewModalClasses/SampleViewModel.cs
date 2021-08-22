@@ -441,6 +441,36 @@ namespace LINQ.ViewModalClasses
                 return sales.Where(sale => sale.productID == prod.productID).Sum(sale => sale.lineTotal);                    
             }
         }
-       
+        public void Take()
+        {
+            if (UseQuerySyntax)
+            {
+                this.products = (from prod in this.products
+                                 orderby prod.name
+                                 select prod).Take(5).ToList();
+            }
+            else
+            {
+                this.products = this.products.OrderBy(prod => prod.name).Take(5).ToList();
+            }
+
+            ResultText = $"Total Products: {products.Count}";
+        }
+        public void Skip()
+        {
+            if (UseQuerySyntax)
+            {
+                this.products = (from prod in this.products
+                                 orderby prod.name
+                                 select prod).Skip(4).ToList();
+            }
+            else
+            {
+                this.products = this.products.OrderBy(prod => prod.name).Skip(4).ToList();
+            }
+
+            ResultText = $"Total Products: {products.Count}";
+        }
+
     }
 }

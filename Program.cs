@@ -52,7 +52,8 @@ namespace LINQ
             //vm.InnerJoinTwoFields();
             //vm.GroupJoin();
             //vm.LeftOuterJoin();
-            vm.GroupBy();
+            //vm.GroupBy();
+            vm.GroupByWhere();
 
 
             foreach (var item in vm.products)

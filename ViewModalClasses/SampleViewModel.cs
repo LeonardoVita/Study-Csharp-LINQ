@@ -1063,5 +1063,38 @@ namespace LINQ.ViewModalClasses
             ResultText = sb.ToString();
             this.products.Clear();
         }
+        public void GroupByWhere()
+        {
+            StringBuilder sb = new StringBuilder(2048);
+            IEnumerable<IGrouping<string, Product>> sizeGroup;
+
+            if (UseQuerySyntax)
+            {
+                sizeGroup = (from prod in this.products
+                             group prod by prod.size into sizes
+                             where sizes.Count() > 2
+                             select sizes);
+            }
+            else
+            {
+                sizeGroup = this.products.GroupBy(prod => prod.size)
+                                         .Where(size => size.Count() > 2);
+            }
+
+            foreach (var group in sizeGroup)
+            {
+                sb.AppendLine($"Size: {group.Key} Count: {group.Count()}");
+
+                foreach (var prod in group)
+                {
+                    sb.Append($"   ProductID: {prod.productID}");
+                    sb.Append($"   Name: {prod.name}");
+                    sb.AppendLine($"   Color: {prod.color}");
+                }
+            }
+
+            ResultText = sb.ToString();
+            this.products.Clear();
+        }
     }
 }

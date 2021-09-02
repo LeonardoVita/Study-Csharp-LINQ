@@ -50,7 +50,8 @@ namespace LINQ
             //vm.Concat();
             //vm.InnerJoin();
             //vm.InnerJoinTwoFields();
-            vm.GroupJoin();
+            //vm.GroupJoin();
+            vm.LeftOuterJoin();
 
 
             foreach (var item in vm.products)

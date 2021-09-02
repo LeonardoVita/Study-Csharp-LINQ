@@ -796,7 +796,7 @@ namespace LINQ.ViewModalClasses
                     sb.AppendLine($"   Product Name: {item.name}");
                     sb.AppendLine($"   Size: {item.size}");
                     sb.AppendLine($"   Order QTY: {item.orderQTY}");
-                    sb.AppendLine($"   Total: {item.lineTotal}c");
+                    sb.AppendLine($"   Total: {item.lineTotal}");
                 }
             }
             else
@@ -868,7 +868,7 @@ namespace LINQ.ViewModalClasses
                     sb.AppendLine($"   Product Name: {item.name}");
                     sb.AppendLine($"   Size: {item.size}");
                     sb.AppendLine($"   Order QTY: {item.orderQTY}");
-                    sb.AppendLine($"   Total: {item.lineTotal}c");
+                    sb.AppendLine($"   Total: {item.lineTotal}");
                 }
             }
             else
@@ -898,7 +898,7 @@ namespace LINQ.ViewModalClasses
                     sb.AppendLine($"   Product Name: {item.name}");
                     sb.AppendLine($"   Size: {item.size}");
                     sb.AppendLine($"   Order QTY: {item.orderQTY}");
-                    sb.AppendLine($"   Total: {item.lineTotal}c");
+                    sb.AppendLine($"   Total: {item.lineTotal}");
                 }
             }
 
@@ -953,6 +953,77 @@ namespace LINQ.ViewModalClasses
                     sb.AppendLine($"   ** No Sales for Product **");
                 }
                 sb.AppendLine("");
+            }
+
+            ResultText = sb.ToString();
+            this.products.Clear();
+        }
+        public void LeftOuterJoin()
+        {
+            StringBuilder sb = new StringBuilder();
+            int count = 0;
+
+            if (UseQuerySyntax)
+            {
+                var query = (from prod in this.products
+                             join sale in this.sales
+                             on prod.productID equals sale.productID
+                                into sales
+                             from sale in sales.DefaultIfEmpty()
+                             select new
+                             {
+                                 prod.productID,
+                                 prod.name,
+                                 prod.color,
+                                 prod.standardCost,
+                                 prod.listPrice,
+                                 prod.size,
+                                 sale?.salesOrderID,
+                                 sale?.orderQTY,
+                                 sale?.unitPrice,
+                                 sale?.lineTotal
+                             }).OrderBy(ps => ps.name);
+
+                foreach (var item in query)
+                {
+                    count++;
+                    sb.AppendLine($"Product Name: {item.name}");
+                    sb.AppendLine($"   Sales Order: {item.salesOrderID}");
+                    sb.AppendLine($"   Size: {item.size}");
+                    sb.AppendLine($"   Order QTY: {item.orderQTY}");
+                    sb.AppendLine($"   Total: {item.lineTotal}");
+                }
+            }
+            else
+            {
+                var query =
+                    this.products.SelectMany(
+                         prod =>
+                         this.sales.Where(s => prod.productID == s.productID)
+                                   .DefaultIfEmpty(),
+                         (prod, sale) => new
+                         {
+                             prod.productID,
+                             prod.name,
+                             prod.color,
+                             prod.standardCost,
+                             prod.listPrice,
+                             prod.size,
+                             sale?.salesOrderID,
+                             sale?.orderQTY,
+                             sale?.unitPrice,
+                             sale?.lineTotal
+                         }).OrderBy(ps => ps.name);
+
+                foreach (var item in query)
+                {
+                    count++;
+                    sb.AppendLine($"Product Name: {item.name}");
+                    sb.AppendLine($"   Sales Order: {item.salesOrderID}");
+                    sb.AppendLine($"   Size: {item.size}");
+                    sb.AppendLine($"   Order QTY: {item.orderQTY}");
+                    sb.AppendLine($"   Total: {item.lineTotal}");
+                }
             }
 
             ResultText = sb.ToString();

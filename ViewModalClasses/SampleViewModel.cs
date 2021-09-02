@@ -1029,5 +1029,37 @@ namespace LINQ.ViewModalClasses
             ResultText = sb.ToString();
             this.products.Clear();
         }
+        public void GroupBy()
+        {
+            StringBuilder sb = new StringBuilder();
+            IEnumerable<IGrouping<string, Product>> sizeGroup;
+
+            if (UseQuerySyntax)
+            {
+                sizeGroup = (from prod in this.products
+                             orderby prod.size, prod.productID descending
+                             group prod by prod.size);
+            }
+            else
+            {
+                sizeGroup = this.products.OrderBy(prod => prod.size).ThenByDescending(prod => prod.productID)
+                                         .GroupBy(prod => prod.size);
+            }
+
+            foreach (var group in sizeGroup)
+            {
+                sb.AppendLine($"Size: {group.Key} Count: {group.Count()}");
+
+                foreach (var prod in group)
+                {
+                    sb.Append($"   ProductID: {prod.productID}");
+                    sb.Append($"   Name: {prod.name}");
+                    sb.AppendLine($"   Color: {prod.color}");
+                }
+            }
+
+            ResultText = sb.ToString();
+            this.products.Clear();
+        }
     }
 }

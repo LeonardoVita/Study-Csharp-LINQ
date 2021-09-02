@@ -76,7 +76,7 @@ namespace LINQ.RepositoryClasses
                   color = "Multi",
                   standardCost = 6.92M,
                   listPrice = 8.99M,
-                  size = "",
+                  size = null,
                 },
                 new Product {
                   productID = 713,

@@ -1154,5 +1154,57 @@ namespace LINQ.ViewModalClasses
             ResultText = sb.ToString();
             this.products.Clear();
         }
+        public void AggregateSum()
+        {
+            decimal? value = 0;
+
+            if (UseQuerySyntax)
+            {
+                value = (from prod in this.products
+                         select prod)
+                         .Aggregate(0M, (sum, prod) => sum += prod.listPrice);
+            }
+            else
+            {
+                value = this.products.Aggregate(0M, (sum, prod) => sum += prod.listPrice);
+            }
+
+            if (value.HasValue)
+            {
+                ResultText = $"Total of all List Prices = {value.Value:c}";
+            }
+            else
+            {
+                ResultText = $"Nenhum valor encontrado";
+            }
+
+            this.products.Clear();
+        }
+        public void AggregateCustom()
+        {
+            decimal? value = 0;
+
+            if (UseQuerySyntax)
+            {
+                value = (from sale in this.sales
+                         select sale)
+                         .Aggregate(0M, (sum, sale) => sum += (sale.orderQTY * sale.unitPrice));
+            }
+            else
+            {
+                value = this.sales.Aggregate(0M, (sum, sale) => sum += (sale.orderQTY * sale.unitPrice));
+            }
+
+            if (value.HasValue)
+            {
+                ResultText = $"Total of all List Prices = {value.Value:c}";
+            }
+            else
+            {
+                ResultText = $"Nenhum valor encontrado";
+            }
+
+            this.products.Clear();
+        }
     }
 }

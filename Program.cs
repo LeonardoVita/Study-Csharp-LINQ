@@ -11,7 +11,7 @@ namespace LINQ
         {
             SampleViewModel vm = new SampleViewModel()
             {
-                UseQuerySyntax = false
+                //UseQuerySyntax = false
             };
 
             //vm.GetAll();
@@ -54,7 +54,9 @@ namespace LINQ
             //vm.LeftOuterJoin();
             //vm.GroupBy();
             //vm.GroupByWhere();
-            vm.GroupedSubQuery();
+            //vm.GroupedSubQuery();
+            //vm.AggregateSum();
+            vm.AggregateCustom();
 
 
             foreach (var item in vm.products)

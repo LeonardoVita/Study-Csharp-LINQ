@@ -796,7 +796,7 @@ namespace LINQ.ViewModalClasses
                     sb.AppendLine($"   Product Name: {item.name}");
                     sb.AppendLine($"   Size: {item.size}");
                     sb.AppendLine($"   Order QTY: {item.orderQTY}");
-                    sb.AppendLine($"   Total: {item.lineTotal}c");
+                    sb.AppendLine($"   Total: {item.lineTotal}");
                 }
             }
             else
@@ -868,7 +868,7 @@ namespace LINQ.ViewModalClasses
                     sb.AppendLine($"   Product Name: {item.name}");
                     sb.AppendLine($"   Size: {item.size}");
                     sb.AppendLine($"   Order QTY: {item.orderQTY}");
-                    sb.AppendLine($"   Total: {item.lineTotal}c");
+                    sb.AppendLine($"   Total: {item.lineTotal}");
                 }
             }
             else
@@ -898,7 +898,7 @@ namespace LINQ.ViewModalClasses
                     sb.AppendLine($"   Product Name: {item.name}");
                     sb.AppendLine($"   Size: {item.size}");
                     sb.AppendLine($"   Order QTY: {item.orderQTY}");
-                    sb.AppendLine($"   Total: {item.lineTotal}c");
+                    sb.AppendLine($"   Total: {item.lineTotal}");
                 }
             }
 
@@ -956,6 +956,254 @@ namespace LINQ.ViewModalClasses
             }
 
             ResultText = sb.ToString();
+            this.products.Clear();
+        }
+        public void LeftOuterJoin()
+        {
+            StringBuilder sb = new StringBuilder();
+            int count = 0;
+
+            if (UseQuerySyntax)
+            {
+                var query = (from prod in this.products
+                             join sale in this.sales
+                             on prod.productID equals sale.productID
+                                into sales
+                             from sale in sales.DefaultIfEmpty()
+                             select new
+                             {
+                                 prod.productID,
+                                 prod.name,
+                                 prod.color,
+                                 prod.standardCost,
+                                 prod.listPrice,
+                                 prod.size,
+                                 sale?.salesOrderID,
+                                 sale?.orderQTY,
+                                 sale?.unitPrice,
+                                 sale?.lineTotal
+                             }).OrderBy(ps => ps.name);
+
+                foreach (var item in query)
+                {
+                    count++;
+                    sb.AppendLine($"Product Name: {item.name}");
+                    sb.AppendLine($"   Sales Order: {item.salesOrderID}");
+                    sb.AppendLine($"   Size: {item.size}");
+                    sb.AppendLine($"   Order QTY: {item.orderQTY}");
+                    sb.AppendLine($"   Total: {item.lineTotal}");
+                }
+            }
+            else
+            {
+                var query =
+                    this.products.SelectMany(
+                         prod =>
+                         this.sales.Where(s => prod.productID == s.productID)
+                                   .DefaultIfEmpty(),
+                         (prod, sale) => new
+                         {
+                             prod.productID,
+                             prod.name,
+                             prod.color,
+                             prod.standardCost,
+                             prod.listPrice,
+                             prod.size,
+                             sale?.salesOrderID,
+                             sale?.orderQTY,
+                             sale?.unitPrice,
+                             sale?.lineTotal
+                         }).OrderBy(ps => ps.name);
+
+                foreach (var item in query)
+                {
+                    count++;
+                    sb.AppendLine($"Product Name: {item.name}");
+                    sb.AppendLine($"   Sales Order: {item.salesOrderID}");
+                    sb.AppendLine($"   Size: {item.size}");
+                    sb.AppendLine($"   Order QTY: {item.orderQTY}");
+                    sb.AppendLine($"   Total: {item.lineTotal}");
+                }
+            }
+
+            ResultText = sb.ToString();
+            this.products.Clear();
+        }
+        public void GroupBy()
+        {
+            StringBuilder sb = new StringBuilder(2048);
+            IEnumerable<IGrouping<string, Product>> sizeGroup;
+
+            if (UseQuerySyntax)
+            {
+                sizeGroup = (from prod in this.products
+                             group prod by prod.size into sizes
+                             orderby sizes.Key
+                             select sizes);
+            }
+            else
+            {
+                sizeGroup = this.products.GroupBy(prod => prod.size)
+                                         .OrderBy(sizes => sizes.Key)
+                                         .Select(sizes => sizes);
+            }
+
+            foreach (var group in sizeGroup)
+            {
+                sb.AppendLine($"Size: {group.Key} Count: {group.Count()}");
+
+                foreach (var prod in group)
+                {
+                    sb.Append($"   ProductID: {prod.productID}");
+                    sb.Append($"   Name: {prod.name}");
+                    sb.AppendLine($"   Color: {prod.color}");
+                }
+            }
+
+            ResultText = sb.ToString();
+            this.products.Clear();
+        }
+        public void GroupByWhere()
+        {
+            StringBuilder sb = new StringBuilder(2048);
+            IEnumerable<IGrouping<string, Product>> sizeGroup;
+
+            if (UseQuerySyntax)
+            {
+                sizeGroup = (from prod in this.products
+                             group prod by prod.size into sizes
+                             where sizes.Count() > 2
+                             select sizes);
+            }
+            else
+            {
+                sizeGroup = this.products.GroupBy(prod => prod.size)
+                                         .Where(size => size.Count() > 2);
+            }
+
+            foreach (var group in sizeGroup)
+            {
+                sb.AppendLine($"Size: {group.Key} Count: {group.Count()}");
+
+                foreach (var prod in group)
+                {
+                    sb.Append($"   ProductID: {prod.productID}");
+                    sb.Append($"   Name: {prod.name}");
+                    sb.AppendLine($"   Color: {prod.color}");
+                }
+            }
+
+            ResultText = sb.ToString();
+            this.products.Clear();
+        }
+        public void GroupedSubQuery()
+        {
+            StringBuilder sb = new StringBuilder();
+            IEnumerable<SaleProducts> salesGroup;
+
+            if (UseQuerySyntax)
+            {
+                salesGroup =
+                    (from sale in this.sales
+                     group sale by sale.salesOrderID
+                     into sales
+                     select new SaleProducts
+                     {
+                         salesOrderID = sales.Key,
+                         products = (from prod in this.products
+                                     join sale in this.sales
+                                     on prod.productID equals sale.productID
+                                     where sale.salesOrderID == sales.Key
+                                     select prod).ToList()
+                     });
+            }
+            else
+            {
+                salesGroup =
+                    this.sales.GroupBy(sale => sale.salesOrderID)
+                              .Select(sales => new SaleProducts
+                              {
+                                  salesOrderID = sales.Key,
+                                  products = this.products.Join(
+                                                 sales,
+                                                 prod => prod.productID,
+                                                 sale => sale.productID,
+                                                 (prod, sale) => prod).ToList()
+                              });
+            }
+
+            foreach (var sale in salesGroup)
+            {
+                sb.AppendLine($"Sales ID: {sale.salesOrderID}");
+
+                if (sale.products.Count() > 0)
+                {
+                    foreach (var prod in sale.products)
+                    {
+                        sb.Append($"   ProductID: {prod.productID}");
+                        sb.Append($"   Name: {prod.name}");
+                        sb.AppendLine($"   Color: {prod.color}");
+                    }
+                }
+                else
+                {
+                    sb.AppendLine($"   Product ID not found for this sale.");
+                }
+            }
+
+            ResultText = sb.ToString();
+            this.products.Clear();
+        }
+        public void AggregateSum()
+        {
+            decimal? value = 0;
+
+            if (UseQuerySyntax)
+            {
+                value = (from prod in this.products
+                         select prod)
+                         .Aggregate(0M, (sum, prod) => sum += prod.listPrice);
+            }
+            else
+            {
+                value = this.products.Aggregate(0M, (sum, prod) => sum += prod.listPrice);
+            }
+
+            if (value.HasValue)
+            {
+                ResultText = $"Total of all List Prices = {value.Value:c}";
+            }
+            else
+            {
+                ResultText = $"Nenhum valor encontrado";
+            }
+
+            this.products.Clear();
+        }
+        public void AggregateCustom()
+        {
+            decimal? value = 0;
+
+            if (UseQuerySyntax)
+            {
+                value = (from sale in this.sales
+                         select sale)
+                         .Aggregate(0M, (sum, sale) => sum += (sale.orderQTY * sale.unitPrice));
+            }
+            else
+            {
+                value = this.sales.Aggregate(0M, (sum, sale) => sum += (sale.orderQTY * sale.unitPrice));
+            }
+
+            if (value.HasValue)
+            {
+                ResultText = $"Total of all List Prices = {value.Value:c}";
+            }
+            else
+            {
+                ResultText = $"Nenhum valor encontrado";
+            }
+
             this.products.Clear();
         }
     }

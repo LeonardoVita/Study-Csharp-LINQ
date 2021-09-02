@@ -53,7 +53,8 @@ namespace LINQ
             //vm.GroupJoin();
             //vm.LeftOuterJoin();
             //vm.GroupBy();
-            vm.GroupByWhere();
+            //vm.GroupByWhere();
+            vm.GroupedSubQuery();
 
 
             foreach (var item in vm.products)

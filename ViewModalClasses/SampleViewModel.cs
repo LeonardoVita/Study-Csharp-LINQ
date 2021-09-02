@@ -1096,5 +1096,63 @@ namespace LINQ.ViewModalClasses
             ResultText = sb.ToString();
             this.products.Clear();
         }
+        public void GroupedSubQuery()
+        {
+            StringBuilder sb = new StringBuilder();
+            IEnumerable<SaleProducts> salesGroup;
+
+            if (UseQuerySyntax)
+            {
+                salesGroup =
+                    (from sale in this.sales
+                     group sale by sale.salesOrderID
+                     into sales
+                     select new SaleProducts
+                     {
+                         salesOrderID = sales.Key,
+                         products = (from prod in this.products
+                                     join sale in this.sales
+                                     on prod.productID equals sale.productID
+                                     where sale.salesOrderID == sales.Key
+                                     select prod).ToList()
+                     });
+            }
+            else
+            {
+                salesGroup =
+                    this.sales.GroupBy(sale => sale.salesOrderID)
+                              .Select(sales => new SaleProducts
+                              {
+                                  salesOrderID = sales.Key,
+                                  products = this.products.Join(
+                                                 sales,
+                                                 prod => prod.productID,
+                                                 sale => sale.productID,
+                                                 (prod, sale) => prod).ToList()
+                              });
+            }
+
+            foreach (var sale in salesGroup)
+            {
+                sb.AppendLine($"Sales ID: {sale.salesOrderID}");
+
+                if (sale.products.Count() > 0)
+                {
+                    foreach (var prod in sale.products)
+                    {
+                        sb.Append($"   ProductID: {prod.productID}");
+                        sb.Append($"   Name: {prod.name}");
+                        sb.AppendLine($"   Color: {prod.color}");
+                    }
+                }
+                else
+                {
+                    sb.AppendLine($"   Product ID not found for this sale.");
+                }
+            }
+
+            ResultText = sb.ToString();
+            this.products.Clear();
+        }
     }
 }

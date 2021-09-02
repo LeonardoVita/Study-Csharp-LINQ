@@ -1031,19 +1031,21 @@ namespace LINQ.ViewModalClasses
         }
         public void GroupBy()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder(2048);
             IEnumerable<IGrouping<string, Product>> sizeGroup;
 
             if (UseQuerySyntax)
             {
                 sizeGroup = (from prod in this.products
-                             orderby prod.size, prod.productID descending
-                             group prod by prod.size);
+                             group prod by prod.size into sizes
+                             orderby sizes.Key
+                             select sizes);
             }
             else
             {
-                sizeGroup = this.products.OrderBy(prod => prod.size).ThenByDescending(prod => prod.productID)
-                                         .GroupBy(prod => prod.size);
+                sizeGroup = this.products.GroupBy(prod => prod.size)
+                                         .OrderBy(sizes => sizes.Key)
+                                         .Select(sizes => sizes);
             }
 
             foreach (var group in sizeGroup)
